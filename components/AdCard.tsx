@@ -1,3 +1,5 @@
+import { formatIndianRupees } from '@/lib/utils';
+
 export default function AdCard({ ad }: { ad: any }) {
   return (
     <div className="border rounded-xl p-4 shadow-sm">
@@ -5,10 +7,10 @@ export default function AdCard({ ad }: { ad: any }) {
         <span className="font-medium">
           {ad.type === 'sell' ? '🟢 Selling' : '🔵 Buying'} {ad.asset}
         </span>
-        <span className="text-xl font-bold">₹{ad.price}</span>
+        <span className="text-xl font-bold">{formatIndianRupees(ad.price)}</span>
       </div>
       <p className="text-sm text-gray-500">
-        Limits: ₹{ad.min_amount} – ₹{ad.max_amount}
+        Limits: {formatIndianRupees(ad.min_amount)} – {formatIndianRupees(ad.max_amount)}
       </p>
       {ad.description && <p className="mt-2">{ad.description}</p>}
       {ad.telegram_handle && (
