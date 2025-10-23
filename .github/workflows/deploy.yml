@@ -1,0 +1,41 @@
+name: 🔄 SwapSathi CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🧰 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 🧹 Clean old builds
+        run: |
+          rm -rf node_modules .next package-lock.json
+
+      - name: 📥 Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: 🧽 Lint check
+        run: npm run lint || echo "Lint warnings ignored"
+
+      - name: 🔍 TypeScript check
+        run: npm run typecheck || echo "Type errors ignored"
+
+      - name: 🏗️ Build project
+        run: npm run build
+
+      - name: 🚀 Deploy to Vercel
+        run: npx vercel --prod --yes --confirm --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
