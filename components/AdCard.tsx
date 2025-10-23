@@ -1,25 +1,37 @@
-export default function AdCard({ ad }: { ad: any }) {
+interface Ad {
+  id: number | string;
+  created_at: string;
+  type: string;
+  asset: string;
+  price: number;
+  min_amount: number;
+  max_amount: number;
+  payment_method: string;
+  description: string;
+  telegram_handle: string;
+  user_id: string;
+  title: string;
+}
+
+interface AdCardProps {
+  ad: Ad;
+}
+
+export default function AdCard({ ad }: AdCardProps) {
+  const date = new Date(ad.created_at).toLocaleDateString();
+
   return (
-    <div className="border rounded-xl p-4 shadow-sm">
-      <div className="flex justify-between">
-        <span className="font-medium">
-          {ad.type === 'sell' ? '🟢 Selling' : '🔵 Buying'} {ad.asset}
-        </span>
-        <span className="text-xl font-bold">₹{ad.price}</span>
-      </div>
-      <p className="text-sm text-gray-500">
-        Limits: ₹{ad.min_amount} – ₹{ad.max_amount}
-      </p>
-      {ad.description && <p className="mt-2">{ad.description}</p>}
-      {ad.telegram_handle && (
-        <a
-          href={`https://t.me/${ad.telegram_handle}`}
-          target="_blank"
-          className="inline-block mt-3 bg-primary text-white px-4 py-2 rounded-lg"
-        >
-          Chat on Telegram
-        </a>
-      )}
+    <div className="border rounded p-4 shadow-sm hover:shadow-md transition">
+      <h2 className="text-xl font-semibold">{ad.title}</h2>
+      <p className="text-gray-500 text-sm mb-2">Posted on {date}</p>
+      <p><strong>Type:</strong> {ad.type}</p>
+      <p><strong>Asset:</strong> {ad.asset}</p>
+      <p><strong>Price:</strong> ₹{ad.price}</p>
+      <p><strong>Min/Max:</strong> {ad.min_amount} - {ad.max_amount}</p>
+      <p><strong>Payment:</strong> {ad.payment_method}</p>
+      <p><strong>Description:</strong> {ad.description}</p>
+      <p><strong>Telegram:</strong> {ad.telegram_handle}</p>
+      <p><strong>User ID:</strong> {ad.user_id}</p>
     </div>
   );
 }

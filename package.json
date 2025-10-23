@@ -5,23 +5,23 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "deploy": "npm run ci-deploy",
+    "ci-deploy": "echo '🚀 Starting SwapSathi CI/CD deploy...' && rm -rf .next node_modules package-lock.json && npm install && npm run lint && npm run typecheck && npm run build && npx vercel --prod --confirm"
   },
   "dependencies": {
-    "@prisma/client": "^6.18.0",
-    "@supabase/supabase-js": "^2.39.6",
-    "next": "14.2.0",
-    "pg": "^8.16.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@supabase/supabase-js": "^2.24.0",
+    "pg": "^8.11.1"
   },
   "devDependencies": {
-    "@types/pg": "^8.15.5",
-    "@types/react": "19.2.2",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.31",
-    "prisma": "^6.17.1",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.4.2"
+    "eslint": "^9.40.0",
+    "eslint-config-next": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "typescript": "^5.2.0"
   }
 }
