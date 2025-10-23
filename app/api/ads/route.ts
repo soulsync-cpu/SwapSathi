@@ -1,27 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../lib/prisma";
+// app/api/data/route.ts
+import { NextResponse } from "next/server";
+import { query } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET() {
   try {
-    if (req.method === "GET") {
-      const users = await prisma.user.findMany({
-        select: { id: true, email: true, name: true, createdAt: true },
-        take: 100,
-      });
-      return res.status(200).json(users);
-    }
+    // PostgreSQL
+    const pgResult = await query("SELECT id, email FROM users LIMIT 10");
 
-    if (req.method === "POST") {
-      const { email, name } = req.body;
-      if (!email) return res.status(400).json({ error: "email_required" });
-      const user = await prisma.user.create({ data: { email, name } });
-      return res.status(201).json(user);
-    }
+    // Supabase
+    const { data: supaData, error } = await supabaseAdmin
+      .from("ads")
+      .select("*")
+      .limit(10);
 
-    res.setHeader("Allow", ["GET", "POST"]);
-    return res.status(405).end();
+    if (error) throw error;
+
+    return NextResponse.json({
+      postgres: pgResult.rows,
+      supabase: supaData,
+    });
   } catch (err) {
-    console.error("API error:", err);
-    return res.status(500).json({ error: "internal_server_error" });
+    console.error("DB query error:", err);
+    return NextResponse.json({ error: "internal_server_error" }, { status: 500 });
   }
 }
